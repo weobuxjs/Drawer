@@ -37,28 +37,27 @@ void Instance::handleInput()
             SDL_GetMouseState(&mouseX, &mouseY);
             if(isDrawing)
             {
-                // SDL_Rect rect = {mouseX, mouseY, 10, 10};
-                // pixel.push_back(rect);
-                canva->update(renderer, mouseX, mouseY);
+                SDL_Rect rect = {mouseX, mouseY, 10, 10};
+                pixel.push_back(rect);
+                
             }
         }
         if(event.type == SDL_MOUSEBUTTONDOWN){
-            // if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
-            // {
-            //     pixel.clear();
-            // }
+            if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
+            {
+                pixel.clear();
+            }
         }
     }
 }
 void Instance::render()
 {    
     clearScreen();
-
     // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     // SDL_RenderFillRects(renderer, pixel.data(), pixel.size());
     SDL_RenderCopy(renderer, canva->getCanv(), NULL, NULL);
     
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
     
     SDL_RenderPresent(renderer);
@@ -67,6 +66,11 @@ void Instance::update()
 {
     // deleteOverlapedPixel();
     // canva
+    if(isDrawing) 
+    {
+        canva->update(renderer, mouseX, mouseY);
+        // std::cout << "DRAWING"; 
+    }
 }
 void Instance::run()
 {   
