@@ -65,7 +65,7 @@ void Instance::render()
 }
 void Instance::update()
 {
-    deleteOverlapedPixel();
+    // deleteOverlapedPixel();
     // canva
 }
 void Instance::run()
