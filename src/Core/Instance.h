@@ -1,11 +1,9 @@
-// #pragma once
 //<--------------------START OF FILE-------------------->
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include <iostream>
 #include <Canva.h>
 #include "../UI/Button.h"
 #include "../commonFunction/commonFunc.h"

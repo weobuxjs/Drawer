@@ -8,13 +8,13 @@ Canva::Canva(SDL_Renderer* renderer, int width, int height) : Entity(0, 0, width
         width, height);
     if(!canv)
     {
-        printf("Failed to initialize canva!\n");
+        printf("Failed to initialize canva surface!\n: %s", SDL_GetError());
     }
-    else{
+    else
+    {
         SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-        
         SDL_SetRenderTarget(renderer, canv);
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderTarget(renderer, screen);
     }
