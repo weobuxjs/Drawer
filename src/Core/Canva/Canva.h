@@ -9,11 +9,14 @@ class Canva : public Entity
 public:
     Canva(SDL_Renderer* renderer, int width, int height);
     void update(SDL_Renderer* renderer, int mouseX, int mouseY);
+    void clearCanva(SDL_Renderer* renderer);
     SDL_Texture* getCanv()
     {
         return canv;
     }
 private:
     SDL_Texture* canv;
+    int WINDOW_WIDTH;
+    int WINDOW_HEIGHT;
 };
 #endif

@@ -40,7 +40,8 @@ void Instance::handleInput()
             isDrawing = true;   
             if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
             {
-                pixel.clear();
+                // pixel.clear();
+                canva->clearCanva(renderer);
             }            
         }
         else if(event.type == SDL_MOUSEBUTTONUP)
@@ -48,10 +49,10 @@ void Instance::handleInput()
             isMouseHoldDown = false;
             isDrawing = false;            
         }
-        if(event.type == SDL_MOUSEMOTION)
-        {
-            SDL_GetMouseState(&mouseX, &mouseY);
-        }
+        // if(event.type == SDL_MOUSEMOTION)
+        // {
+        //     SDL_GetMouseState(&mouseX, &mouseY);
+        // }
     }
 }
 void Instance::render()
@@ -68,6 +69,7 @@ void Instance::render()
 }
 void Instance::update()
 {   
+    SDL_GetMouseState(&mouseX, &mouseY);
     if(isDrawing) 
     {        
         // SDL_Rect rect = {mouseX, mouseY, 10, 10};

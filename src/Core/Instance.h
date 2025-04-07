@@ -4,7 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
-#include <Canva.h>
+#include "Canva/Canva.h"
 #include "../UI/Button.h"
 #include "../commonFunction/commonFunc.h"
 struct Point2D
@@ -54,7 +54,6 @@ private:
     SDL_Renderer* renderer;
     std::vector<SDL_Rect> pixel;
     Canva* canva;
-    
     // UI
     Button* clearScreenButton;
 };

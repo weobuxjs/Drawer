@@ -1,0 +1,1 @@
+ g++ src/main.cpp src/commonFunction/*.cpp src/Core/*.cpp src/Core/Canva/*.cpp -lSDL2 -o bin/Drawer
