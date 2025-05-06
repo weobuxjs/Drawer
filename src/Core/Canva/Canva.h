@@ -10,7 +10,7 @@ public:
     Canva(SDL_Renderer* renderer, int width, int height);
     void update(SDL_Renderer* renderer, int mouseX, int mouseY);
     void clearCanva(SDL_Renderer* renderer);
-    SDL_Texture* getCanv()
+    SDL_Texture* getCanvaTex()
     {
         return canv;
     }

@@ -33,7 +33,6 @@ class Instance
 {
 public:
     Instance();
-    // bool init();
     void run();
     void handleInput();
     void update();
@@ -52,7 +51,7 @@ private:
     SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;
-    std::vector<SDL_Rect> pixel;
+    // std::vector<SDL_Rect> pixel;
     Canva* canva;
     // UI
     Button* clearScreenButton;

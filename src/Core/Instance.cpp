@@ -30,6 +30,7 @@ void Instance::handleInput()
 {
     while(SDL_PollEvent(&event))
     {
+        SDL_GetMouseState(&mouseX, &mouseY);
         if(event.type == SDL_QUIT)
         {
             isRunning = false;
@@ -38,50 +39,40 @@ void Instance::handleInput()
         {
             isMouseHoldDown = true;
             isDrawing = true;   
-            if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
-            {
-                // pixel.clear();
-                canva->clearCanva(renderer);
-            }            
+      
         }
         else if(event.type == SDL_MOUSEBUTTONUP)
         {
             isMouseHoldDown = false;
             isDrawing = false;            
         }
-        // if(event.type == SDL_MOUSEMOTION)
-        // {
-        //     SDL_GetMouseState(&mouseX, &mouseY);
-        // }
     }
 }
 void Instance::render()
 {    
     clearScreen();
-    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    // SDL_RenderFillRects(renderer, pixel.data(), pixel.size());
-    
-    SDL_RenderCopy(renderer, canva->getCanv(), NULL, NULL);
+    SDL_RenderCopy(renderer, canva->getCanvaTex(), NULL, NULL);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
-    
     SDL_RenderPresent(renderer);
 }
 void Instance::update()
 {   
-    SDL_GetMouseState(&mouseX, &mouseY);
+    if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
+    {
+        canva->clearCanva(renderer);
+    }      
     if(isDrawing) 
     {        
-        // SDL_Rect rect = {mouseX, mouseY, 10, 10};
-        // pixel.push_back(rect);
         canva->update(renderer, mouseX, mouseY);
-        printf("Drawing\n");
+        // printf("Drawing\n");
     }
 }
 void Instance::run()
 {   
     while(isRunning)
     {
+        
         handleInput();
         update();
         render();
@@ -92,31 +83,32 @@ void Instance::cleanup()
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 }
-void Instance::deleteOverlapedPixel()
+// void Instance::deleteOverlapedPixel()
+// {
+//     for(int i = 0; i < pixel.size(); i++)
+//     {
+//         SDL_Rect* A = &pixel[i];
+//         if(!A) 
+//         {
+//             continue;
+//         }
+//         for(int j = i + 1; j < pixel.size(); j++)
+//         {
+//             SDL_Rect* B = &pixel[j];
+//             if(!B)
+//             {
+//                 continue;
+//             }
+//             if(A->x == B->x && A->y == B->y)
+//             {
+//                 pixel.erase(pixel.begin() + i);
+//                 i--;
+//             }
+//         }
+//     }
+// }
+void Instance::clearScreen()
 {
-    for(int i = 0; i < pixel.size(); i++)
-    {
-        SDL_Rect* A = &pixel[i];
-        if(!A) 
-        {
-            continue;
-        }
-        for(int j = i + 1; j < pixel.size(); j++)
-        {
-            SDL_Rect* B = &pixel[j];
-            if(!B)
-            {
-                continue;
-            }
-            if(A->x == B->x && A->y == B->y)
-            {
-                pixel.erase(pixel.begin() + i);
-                i--;
-            }
-        }
-    }
-}
-void Instance::clearScreen(){
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 }
