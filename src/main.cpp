@@ -1,4 +1,3 @@
-//<--------------------START OF FILE-------------------->
 #include "Core/Instance.h"
 int main(int argc, char *argv[])
 {
@@ -8,4 +7,3 @@ int main(int argc, char *argv[])
     mainInstance->cleanup();
     return 0;
 }
-//<--------------------END OF FILE-------------------->

@@ -1,4 +1,3 @@
-//<--------------------START OF FILE-------------------->
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
@@ -58,5 +57,3 @@ private:
 };
 
 #endif
-
-//<--------------------END OF FILE-------------------->

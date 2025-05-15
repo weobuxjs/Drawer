@@ -1,4 +1,3 @@
-//<--------------------START OF FILE-------------------->
 #include "Instance.h"
 Instance::Instance()
 {
@@ -58,7 +57,7 @@ void Instance::render()
 }
 void Instance::update()
 {   
-    if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()))
+    if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()) && isMouseHoldDown)
     {
         canva->clearCanva(renderer);
     }      
@@ -66,6 +65,10 @@ void Instance::update()
     {        
         canva->update(renderer, mouseX, mouseY);
         // printf("Drawing\n");
+    }
+    else
+    {
+        canva->update(renderer, -1, -1);
     }
 }
 void Instance::run()
@@ -112,5 +115,3 @@ void Instance::clearScreen()
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 }
-
-//<--------------------END OF FILE-------------------->

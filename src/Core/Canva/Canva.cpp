@@ -21,16 +21,25 @@ Canva::Canva(SDL_Renderer* renderer, int width, int height) : Entity(0, 0, width
         SDL_RenderClear(renderer);
         SDL_SetRenderTarget(renderer, screen);
     }
+    preMouseX = -1;
+    preMouseY = -1;
 };
 void Canva::update(SDL_Renderer* renderer, int mouseX, int mouseY)
-{
+{       
     SDL_Texture* screen = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, canv);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    // printf("ATT %d %d\n", mouseX, mouseY);
-    SDL_Rect tRect = {mouseX, mouseY, 10, 10};
-    SDL_RenderFillRect(renderer, &tRect);
+    if(preMouseX == -1 && preMouseY == -1)
+    {
+        SDL_RenderDrawPoint(renderer, mouseX, mouseX);
+    }
+    else if(mouseX >= 0 && mouseY >= 0) 
+    {
+        SDL_RenderDrawLine(renderer, preMouseX, preMouseY, mouseX, mouseY); 
+    }
     SDL_SetRenderTarget(renderer, screen);
+    preMouseX = mouseX;
+    preMouseY = mouseY;
 }
 void Canva::clearCanva(SDL_Renderer* renderer)
 {

@@ -1,2 +1,2 @@
 @echo off
-g++ src/main.cpp src/commonFunction/commonFunc.cpp src/Core/Instance.cpp src/Core/Entity.cpp src/Core/Canva.cpp -I src/Core -I src/commonFunction -I src/UI -o bin/Drawer -lmingw32 -Wall -lSDL2main -lSDL2
+g++ src\main.cpp src\commonFunction\commonFunc.cpp src\Core\Instance.cpp src\Core\Entity.cpp src\Core\Canva\Canva.cpp -I src\Core -I src\commonFunction -I src\UI -o bin\Drawer -lmingw32 -Wall -lSDL2main -lSDL2

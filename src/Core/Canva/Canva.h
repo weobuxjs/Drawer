@@ -18,5 +18,7 @@ private:
     SDL_Texture* canv;
     int WINDOW_WIDTH;
     int WINDOW_HEIGHT;
+    int preMouseX;
+    int preMouseY;
 };
 #endif
