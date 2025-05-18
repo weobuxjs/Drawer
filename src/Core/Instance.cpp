@@ -4,6 +4,7 @@ Instance::Instance()
     isRunning = true;
     isMouseHoldDown = false;
     isDrawing = false;
+    drawMode = LINE;
     window = SDL_CreateWindow("Drawer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     if(!window)
     {
@@ -20,6 +21,9 @@ Instance::Instance()
     {
         printf("failed to initialize canva!\n");
     }
+    temporalX = -1;
+    temporalY = -1;
+
 }
 // bool Instance::init()
 // {
@@ -51,6 +55,16 @@ void Instance::render()
 {    
     clearScreen();
     SDL_RenderCopy(renderer, canva->getCanvaTex(), NULL, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    if(drawMode == RECTANGLE)
+    {
+        SDL_RenderDrawRect(renderer, &tmpRect);
+    }
+    else if(drawMode == LINE)
+    {
+        SDL_RenderDrawLine(renderer, tmpLine.x1, tmpLine.y1, tmpLine.x2, tmpLine.y2);  
+    }
+    
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
     SDL_RenderPresent(renderer);
@@ -63,8 +77,29 @@ void Instance::update()
     }      
     if(isDrawing) 
     {        
-        canva->update(renderer, mouseX, mouseY);
-        // printf("Drawing\n");
+        if(drawMode == POINT)
+        {
+            canva->update(renderer, mouseX, mouseY);
+        }
+        else if(drawMode == RECTANGLE)
+        {
+            if(temporalX == -1 && temporalY == -1)
+            {
+                temporalX = mouseX;
+                temporalY = mouseY;
+            }
+            tmpRect = {temporalX, temporalY, mouseX - temporalX, mouseY - temporalY};
+            // printf("%d %d %d %d\n", tmpRect.x, tmpRect.y, tmpRect.w, tmpRect.h);
+        }
+        else
+        {
+            if(temporalX == -1 && temporalY == -1)
+            {
+                temporalX = mouseX;
+                temporalY = mouseY;
+            }
+            tmpLine = {temporalX, temporalY, mouseX, mouseY};
+        }
     }
     else
     {
@@ -86,30 +121,6 @@ void Instance::cleanup()
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 }
-// void Instance::deleteOverlapedPixel()
-// {
-//     for(int i = 0; i < pixel.size(); i++)
-//     {
-//         SDL_Rect* A = &pixel[i];
-//         if(!A) 
-//         {
-//             continue;
-//         }
-//         for(int j = i + 1; j < pixel.size(); j++)
-//         {
-//             SDL_Rect* B = &pixel[j];
-//             if(!B)
-//             {
-//                 continue;
-//             }
-//             if(A->x == B->x && A->y == B->y)
-//             {
-//                 pixel.erase(pixel.begin() + i);
-//                 i--;
-//             }
-//         }
-//     }
-// }
 void Instance::clearScreen()
 {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

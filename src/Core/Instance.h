@@ -28,6 +28,13 @@ struct Pixel
         length = pLength;
     }
 };
+struct Line
+{
+    int x1;
+    int y1;
+    int x2;
+    int y2;
+};
 class Instance
 {
 public:
@@ -42,15 +49,19 @@ public:
 private:
     int mouseX;
     int mouseY;
+    int temporalX;
+    int temporalY;
+    DrawMode drawMode;
     const int WINDOW_HEIGHT = 700;
     const int WINDOW_WIDTH = 1000;
     bool isRunning;
     bool isMouseHoldDown;
     bool isDrawing;
+    SDL_Rect DRAWING tmpRect;
+    Line DRAWING tmpLine;
     SDL_Event event;
     SDL_Window* window;
     SDL_Renderer* renderer;
-    // std::vector<SDL_Rect> pixel;
     Canva* canva;
     // UI
     Button* clearScreenButton;
