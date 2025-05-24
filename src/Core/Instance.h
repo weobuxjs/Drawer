@@ -36,7 +36,7 @@ public:
     void update();
     void deleteOverlapedPixel();
     void render();
-    void cleanup(); 
+    void cleanUp(); 
     void clearScreen();
     void renderDrawingShape();
     void updateDrawingShape();

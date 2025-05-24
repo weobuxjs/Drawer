@@ -79,7 +79,7 @@ void Instance::run()
         render();
     }
 }
-void Instance::cleanup()
+void Instance::cleanUp()
 {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
