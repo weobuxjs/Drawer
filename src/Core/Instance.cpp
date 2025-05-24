@@ -4,13 +4,13 @@ Instance::Instance()
     isRunning = true;
     isMouseHoldDown = false;
     isDrawing = false;
-    drawMode = LINE;
+    drawMode = RECTANGLE;
     window = SDL_CreateWindow("Drawer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if(!window)
     {
         printf("%s\n", SDL_GetError());
     }
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC ); 
     if(!renderer)
     {
         printf("%s\n", SDL_GetError());
@@ -23,12 +23,7 @@ Instance::Instance()
     }
     temporalX = -1;
     temporalY = -1;
-
 }
-// bool Instance::init()
-// {
-    
-// }
 void Instance::handleInput()
 {
     while(SDL_PollEvent(&event))
@@ -42,7 +37,6 @@ void Instance::handleInput()
         {
             isMouseHoldDown = true;
             isDrawing = true;   
-      
         }
         else if(event.type == SDL_MOUSEBUTTONUP)
         {
@@ -56,17 +50,9 @@ void Instance::render()
     clearScreen();
     SDL_RenderCopy(renderer, canva->getCanvaTex(), NULL, NULL);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    if(drawMode == RECTANGLE)
-    {
-        SDL_RenderDrawRect(renderer, &tmpRect);
-    }
-    else if(drawMode == LINE)
-    {
-        SDL_RenderDrawLine(renderer, tmpLine.x1, tmpLine.y1, tmpLine.x2, tmpLine.y2);  
-    }
-    
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
+    renderDrawingShape();
+    // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    // SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
     SDL_RenderPresent(renderer);
 }
 void Instance::update()
@@ -77,40 +63,17 @@ void Instance::update()
     }      
     if(isDrawing) 
     {        
-        if(drawMode == POINT)
-        {
-            canva->update(renderer, mouseX, mouseY);
-        }
-        else if(drawMode == RECTANGLE)
-        {
-            if(temporalX == -1 && temporalY == -1)
-            {
-                temporalX = mouseX;
-                temporalY = mouseY;
-            }
-            tmpRect = {temporalX, temporalY, mouseX - temporalX, mouseY - temporalY};
-            // printf("%d %d %d %d\n", tmpRect.x, tmpRect.y, tmpRect.w, tmpRect.h);
-        }
-        else
-        {
-            if(temporalX == -1 && temporalY == -1)
-            {
-                temporalX = mouseX;
-                temporalY = mouseY;
-            }
-            tmpLine = {temporalX, temporalY, mouseX, mouseY};
-        }
+        updateDrawingShape();
     }
     else
     {
-        canva->update(renderer, -1, -1);
+        sendDrawingShapeToCanva();
     }
 }
 void Instance::run()
 {   
     while(isRunning)
     {
-        
         handleInput();
         update();
         render();
@@ -125,4 +88,63 @@ void Instance::clearScreen()
 {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
+}
+void DRAWING Instance::renderDrawingShape()
+{
+    if(drawMode == RECTANGLE)
+    {
+        SDL_RenderDrawRect(renderer, &tmpRect);
+    }
+    else if(drawMode == LINE)
+    {
+        SDL_RenderDrawLine(renderer, tmpLine.x1, tmpLine.y1, tmpLine.x2, tmpLine.y2);  
+    }
+    else if(drawMode == POINT)
+    {
+        SDL_RenderDrawPoint(renderer, temporalX, temporalY);
+    }
+}
+void Instance::updateDrawingShape()
+{
+    if(drawMode == POINT)
+    {
+        canva->renderPoint(renderer, mouseX, mouseY);
+    }
+    else if(drawMode == RECTANGLE)
+    {
+        if(temporalX == -1 && temporalY == -1)
+        {
+            temporalX = mouseX;
+            temporalY = mouseY;
+        }
+        tmpRect = {temporalX, temporalY, mouseX - temporalX, mouseY - temporalY};
+    }
+    else if(drawMode == LINE)
+    {
+        if(temporalX == -1 && temporalY == -1)
+        {
+            temporalX = mouseX;
+            temporalY = mouseY;
+        }
+        tmpLine = {temporalX, temporalY, mouseX, mouseY};
+    }
+}
+void Instance::sendDrawingShapeToCanva()
+{
+    if(drawMode == POINT)
+    {
+        canva->renderPoint(renderer, -1, -1);
+    }
+    else if(drawMode == RECTANGLE)
+    {
+        canva->renderRect(renderer, tmpRect);
+        tmpRect = {-1, -1, -1, -1};
+    }
+    else if(drawMode == LINE)
+    {
+        canva->renderLine(renderer, tmpLine);
+        tmpLine = {-1, -1, -1, -1};
+    }
+    temporalX = -1;
+    temporalY = -1;
 }
