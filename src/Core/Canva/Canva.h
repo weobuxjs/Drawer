@@ -24,6 +24,7 @@ public:
     Canva(SDL_Renderer* renderer, int width, int height);
     void update(DrawMode drawMode, SDL_Renderer* renderer);
     void clearCanva(SDL_Renderer* renderer);  
+    void handleInput(SDL_Event& event);
     void DRAWING renderPoint(SDL_Renderer* renderer, int x, int y);
     void DRAWING renderRect(SDL_Renderer* renderer, SDL_Rect rect);
     void DRAWING renderLine(SDL_Renderer* renderer, Line line);

@@ -4,7 +4,7 @@ Instance::Instance()
     isRunning = true;
     isMouseHoldDown = false;
     isDrawing = false;
-    drawMode = RECTANGLE;
+    drawMode = POINT;
     window = SDL_CreateWindow("Drawer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
     if(!window)
@@ -42,6 +42,25 @@ void Instance::handleInput()
         {
             isMouseHoldDown = false;
             isDrawing = false;            
+        }
+        if(event.type == SDL_KEYDOWN)
+        {
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_s:
+                    if(drawMode == POINT)
+                    {
+                        drawMode = RECTANGLE;
+                    }
+                    else if(drawMode == RECTANGLE)
+                    {
+                        drawMode = LINE;
+                    }
+                    else if(drawMode == LINE)
+                    {
+                        drawMode = POINT;
+                    }
+            }
         }
     }
 }
