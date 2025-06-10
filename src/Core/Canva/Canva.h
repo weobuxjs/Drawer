@@ -10,7 +10,9 @@ enum DrawMode
     POINT,
     LINE,
     RECTANGLE,
+    CIRCLE,
     RIGHT_TRIANGLE
+    
 };
 struct Line
 {
@@ -30,6 +32,7 @@ public:
     void DRAWING renderRect(SDL_Renderer* renderer, SDL_Rect rect);
     void DRAWING renderLine(SDL_Renderer* renderer, Line line);
     void DRAWING renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect);
+    void DRAWING renderCircle(SDL_Renderer* renderer, int x, int y, int r);
     SDL_Texture* getCanvaTex()
     {
         return canv;

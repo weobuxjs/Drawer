@@ -82,4 +82,15 @@ void Canva::renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect)
     SDL_RenderDrawLine(renderer, rect.x, rect.y + rect.h, rect.x + rect.w, rect.y);
     SDL_SetRenderTarget(renderer, screen);
 }
+void Canva::renderCircle(SDL_Renderer* renderer, int x, int y, int r)
+{
+    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
+    SDL_SetRenderTarget(renderer, canv);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    for (float theta = 0; theta < 360; theta += 0.1)
+    {
+        SDL_RenderDrawPoint(renderer, x + r * cos(theta * 3.14 / 180), y + r * sin(theta* 3.14 / 180));
+    }
+    SDL_SetRenderTarget(renderer, screen);
+}
 //<--------------------END OF FILE-------------------->

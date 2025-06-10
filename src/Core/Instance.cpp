@@ -61,13 +61,14 @@ void Instance::render()
     SDL_RenderCopy(renderer, canva->getCanvaTex(), NULL, NULL);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     renderDrawingShape();
+    
     // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     // SDL_RenderFillRect(renderer, &clearScreenButton->getCollision());
     SDL_RenderPresent(renderer);
 }
 void Instance::update()
 {   
-    if(commonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()) && isMouseHoldDown)
+    if(CommonFunc::checkMouseCollision(mouseX, mouseY, clearScreenButton->getCollision()) && isMouseHoldDown)
     {
         canva->clearCanva(renderer);
     }      
@@ -100,18 +101,29 @@ void Instance::clearScreen()
     SDL_RenderClear(renderer);
 }
 void Instance::renderDrawingShape()
-{
-    if(drawMode == RECTANGLE)
+{    
+    if(drawMode == POINT)
     {
-        SDL_RenderDrawRect(renderer, &tmpRect);
-    }
+        SDL_RenderDrawPoint(renderer, temporalX, temporalY);
+    }    
     else if(drawMode == LINE)
     {
         SDL_RenderDrawLine(renderer, tmpLine.x1, tmpLine.y1, tmpLine.x2, tmpLine.y2);  
     }
-    else if(drawMode == POINT)
+    else if(drawMode == RECTANGLE)
     {
-        SDL_RenderDrawPoint(renderer, temporalX, temporalY);
+        SDL_RenderDrawRect(renderer, &tmpRect);
+    }
+    else if(drawMode == CIRCLE)
+    {
+        if(isDrawing)
+        {
+            float r = CommonFunc::calculateDistance(temporalX, temporalY, mouseX, mouseY);
+            for(float theta = 0; theta < 360; theta += 0.1)
+            {
+                SDL_RenderDrawPoint(renderer, temporalX + r * cos(theta * 3.14 / 180) , temporalY + r * sin(theta* 3.14 / 180));
+            }
+        }
     }
     else if(drawMode == RIGHT_TRIANGLE)
     {
@@ -144,6 +156,14 @@ void Instance::updateDrawingShape()
         }
         tmpLine = {temporalX, temporalY, mouseX, mouseY};
     }
+    else if(drawMode == CIRCLE)
+    {
+        if(temporalX == -1 && temporalY == -1)
+        {
+            temporalX = mouseX;
+            temporalY = mouseY;
+        }
+    }
     else if(drawMode == RIGHT_TRIANGLE)
     {
         if(temporalX == -1 && temporalY == -1)
@@ -170,6 +190,13 @@ void Instance::sendDrawingShapeToCanva()
         canva->renderLine(renderer, tmpLine);
         tmpLine = {-1, -1, -1, -1};
     }
+    else if(drawMode == CIRCLE)
+    {
+        if(temporalX != -1 && temporalY != -1)
+        {
+            canva->renderCircle(renderer, temporalX, temporalY, CommonFunc::calculateDistance(temporalX, temporalY, mouseX, mouseY));
+        }
+    }
     else if(drawMode == RIGHT_TRIANGLE)
     {
         canva->renderRightTriangle(renderer, tmpRect);
@@ -180,21 +207,5 @@ void Instance::sendDrawingShapeToCanva()
 }
 void Instance::switchDrawingMode()
 {
-    if(drawMode == POINT)
-    {
-        drawMode = RECTANGLE;
-    }
-    else if(drawMode == RECTANGLE)
-    {
-        drawMode = LINE;
-    }
-    else if(drawMode == LINE)
-    {          
-        drawMode = RIGHT_TRIANGLE;
-    }         
-    else if(drawMode == RIGHT_TRIANGLE)
-    {
-        drawMode = POINT;
-    }
-
+    drawMode = DrawMode((drawMode + 1) % 5);
 }

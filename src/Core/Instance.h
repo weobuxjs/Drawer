@@ -2,9 +2,10 @@
 #define INSTANCE_H
 #include <SDL2/SDL.h>
 #include <vector>
+#include <math.h>
 #include "Canva/Canva.h"
 #include "../UI/Button.h"
-#include "../commonFunction/commonFunc.h"
+#include "../CommonFunction/CommonFunc.h"
 class Instance
 {
 public:
