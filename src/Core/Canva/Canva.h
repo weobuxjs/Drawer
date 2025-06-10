@@ -9,7 +9,8 @@ enum DrawMode
 {
     POINT,
     LINE,
-    RECTANGLE
+    RECTANGLE,
+    RIGHT_TRIANGLE
 };
 struct Line
 {
@@ -28,6 +29,7 @@ public:
     void DRAWING renderPoint(SDL_Renderer* renderer, int x, int y);
     void DRAWING renderRect(SDL_Renderer* renderer, SDL_Rect rect);
     void DRAWING renderLine(SDL_Renderer* renderer, Line line);
+    void DRAWING renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect);
     SDL_Texture* getCanvaTex()
     {
         return canv;
@@ -43,7 +45,7 @@ private:
     int WINDOW_HEIGHT;
     int preMouseX;
     int preMouseY;
-    int DRAWING temporalX;
-    int DRAWING temporalY;
+    int tmpX;
+    int tmpY;
 };
 #endif

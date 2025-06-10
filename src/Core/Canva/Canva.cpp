@@ -22,8 +22,6 @@ Canva::Canva(SDL_Renderer* renderer, int width, int height) : Entity(0, 0, width
     }
     preMouseX = -1;
     preMouseY = -1;
-    // DRAWING temporalX = -1;
-    // DRAWING temporalY = -1;
     drawMode = RECTANGLE;
 };
 
@@ -40,7 +38,7 @@ void Canva::clearCanva(SDL_Renderer* renderer)
     SDL_RenderFillRect(renderer, &blankScreen);
     SDL_SetRenderTarget(renderer, screen);
 }
-void DRAWING Canva::renderPoint(SDL_Renderer* renderer, int x, int y)
+void Canva::renderPoint(SDL_Renderer* renderer, int x, int y)
 {
     SDL_Texture* screen = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, canv);
@@ -57,7 +55,7 @@ void DRAWING Canva::renderPoint(SDL_Renderer* renderer, int x, int y)
     preMouseX = x;
     preMouseY = y;
 }
-void DRAWING Canva::renderRect(SDL_Renderer* renderer, SDL_Rect rect)
+void Canva::renderRect(SDL_Renderer* renderer, SDL_Rect rect)
 {
     SDL_Rect tmpRect = rect;
     SDL_Texture* screen = SDL_GetRenderTarget(renderer);
@@ -66,12 +64,22 @@ void DRAWING Canva::renderRect(SDL_Renderer* renderer, SDL_Rect rect)
     SDL_RenderDrawRect(renderer, &tmpRect);
     SDL_SetRenderTarget(renderer, screen);
 }
-void DRAWING Canva::renderLine(SDL_Renderer* renderer, Line line)
+void Canva::renderLine(SDL_Renderer* renderer, Line line)
 {
     SDL_Texture* screen = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, canv);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderDrawLine(renderer, line.x1, line.y1, line.x2, line.y2);
+    SDL_SetRenderTarget(renderer, screen);
+}
+void Canva::renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect)
+{
+    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
+    SDL_SetRenderTarget(renderer, canv);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderDrawLine(renderer, rect.x, rect.y, rect.x, rect.y + rect.h);
+    SDL_RenderDrawLine(renderer, rect.x, rect.y, rect.x + rect.w, rect.y);
+    SDL_RenderDrawLine(renderer, rect.x, rect.y + rect.h, rect.x + rect.w, rect.y);
     SDL_SetRenderTarget(renderer, screen);
 }
 //<--------------------END OF FILE-------------------->

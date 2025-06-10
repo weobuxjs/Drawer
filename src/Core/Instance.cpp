@@ -48,18 +48,9 @@ void Instance::handleInput()
             switch (event.key.keysym.sym)
             {
                 case SDLK_s:
-                    if(drawMode == POINT)
-                    {
-                        drawMode = RECTANGLE;
-                    }
-                    else if(drawMode == RECTANGLE)
-                    {
-                        drawMode = LINE;
-                    }
-                    else if(drawMode == LINE)
-                    {
-                        drawMode = POINT;
-                    }
+                    sendDrawingShapeToCanva();
+                    switchDrawingMode();
+                    break;
             }
         }
     }
@@ -108,7 +99,7 @@ void Instance::clearScreen()
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 }
-void DRAWING Instance::renderDrawingShape()
+void Instance::renderDrawingShape()
 {
     if(drawMode == RECTANGLE)
     {
@@ -121,6 +112,12 @@ void DRAWING Instance::renderDrawingShape()
     else if(drawMode == POINT)
     {
         SDL_RenderDrawPoint(renderer, temporalX, temporalY);
+    }
+    else if(drawMode == RIGHT_TRIANGLE)
+    {
+        SDL_RenderDrawLine(renderer, tmpRect.x, tmpRect.y, tmpRect.x, tmpRect.y + tmpRect.h);
+        SDL_RenderDrawLine(renderer, tmpRect.x, tmpRect.y, tmpRect.x + tmpRect.w, tmpRect.y);
+        SDL_RenderDrawLine(renderer, tmpRect.x, tmpRect.y + tmpRect.h, tmpRect.x + tmpRect.w, tmpRect.y);
     }
 }
 void Instance::updateDrawingShape()
@@ -147,6 +144,15 @@ void Instance::updateDrawingShape()
         }
         tmpLine = {temporalX, temporalY, mouseX, mouseY};
     }
+    else if(drawMode == RIGHT_TRIANGLE)
+    {
+        if(temporalX == -1 && temporalY == -1)
+        {
+            temporalX = mouseX;
+            temporalY = mouseY;
+        }
+        tmpRect = {temporalX, temporalY, mouseX - temporalX, mouseY - temporalY};
+    }
 }
 void Instance::sendDrawingShapeToCanva()
 {
@@ -164,6 +170,31 @@ void Instance::sendDrawingShapeToCanva()
         canva->renderLine(renderer, tmpLine);
         tmpLine = {-1, -1, -1, -1};
     }
+    else if(drawMode == RIGHT_TRIANGLE)
+    {
+        canva->renderRightTriangle(renderer, tmpRect);
+        tmpRect = {-1, -1, -1, -1};
+    }
     temporalX = -1;
     temporalY = -1;
+}
+void Instance::switchDrawingMode()
+{
+    if(drawMode == POINT)
+    {
+        drawMode = RECTANGLE;
+    }
+    else if(drawMode == RECTANGLE)
+    {
+        drawMode = LINE;
+    }
+    else if(drawMode == LINE)
+    {          
+        drawMode = RIGHT_TRIANGLE;
+    }         
+    else if(drawMode == RIGHT_TRIANGLE)
+    {
+        drawMode = POINT;
+    }
+
 }
