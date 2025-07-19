@@ -1,96 +1,85 @@
 //<--------------------START OF FILE-------------------->
 #include "Canva.h"
-Canva::Canva(SDL_Renderer* renderer, int width, int height) : Entity(0, 0, width, height, NULL)
+Canva::Canva(int width, int height) : Entity(0, 0, width, height, NULL)
 {
     WINDOW_WIDTH = width;
     WINDOW_HEIGHT = height;
-    canv = SDL_CreateTexture(renderer, 
-        SDL_PIXELFORMAT_RGBA8888, 
-        SDL_TEXTUREACCESS_TARGET, 
-        width, height);
+    canv = GUI::CreateTexture(width, height);
     if(!canv)
     {
         printf("Failed to initialize canva surface!\n: %s", SDL_GetError());
     }
     else
     {
-        SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-        SDL_SetRenderTarget(renderer, canv);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer);
-        SDL_SetRenderTarget(renderer, screen);
+        SDL_Texture* screen = GUI::GetRenderTarget();
+        GUI::SetRenderTarget(canv);
+        GUI::SetColor(255, 255, 255, 255);
+        GUI::ClearScreen();
+        GUI::SetRenderTarget(screen);
     }
     preMouseX = -1;
     preMouseY = -1;
     drawMode = RECTANGLE;
+    texture = canv;
 };
-
-// void Canva::update(DrawMode drawMode, SDL_Renderer* renderer)
-// {       
-
-// }
-void Canva::clearCanva(SDL_Renderer* renderer)
+void Canva::ClearCanva()
 {
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_Rect blankScreen = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_RenderFillRect(renderer, &blankScreen);
-    SDL_SetRenderTarget(renderer, screen);
+    Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(255, 255, 255, 255);
+    GUI::ClearScreen();
+    GUI::SetRenderTarget(screen);
 }
-void Canva::renderPoint(SDL_Renderer* renderer, int x, int y)
+void Canva::RenderPoint(int x, int y)
 {
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(0, 0, 0, 255);
     if(preMouseX == -1 && preMouseY == -1)
     {
-        SDL_RenderDrawPoint(renderer, x, y);
+        GUI::DrawPoint(x, y);
     }
     else if(x >= 0 && y >= 0) 
     {
-        SDL_RenderDrawLine(renderer, preMouseX, preMouseY, x, y); 
+        GUI::DrawLine(preMouseX, preMouseY, x, y);
     }
-    SDL_SetRenderTarget(renderer, screen);
     preMouseX = x;
     preMouseY = y;
+    GUI::SetRenderTarget(screen);
 }
-void Canva::renderRect(SDL_Renderer* renderer, SDL_Rect rect)
+void Canva::RenderRect(Rect rect)
 {
     SDL_Rect tmpRect = rect;
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawRect(renderer, &tmpRect);
-    SDL_SetRenderTarget(renderer, screen);
+    SDL_Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(0, 0, 0, 255);
+    GUI::DrawRect(tmpRect);
+    GUI::SetRenderTarget(screen);
 }
-void Canva::renderLine(SDL_Renderer* renderer, Line line)
+void Canva::RenderLine(Line line)
 {
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawLine(renderer, line.x1, line.y1, line.x2, line.y2);
-    SDL_SetRenderTarget(renderer, screen);
+    SDL_Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(0, 0, 0, 255);
+    GUI::DrawLine(line.x1, line.y1, line.x2, line.y2);
+    GUI::SetRenderTarget(screen);
 }
-void Canva::renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect)
+void Canva::RenderRightTriangle(Rect rect)
 {
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderDrawLine(renderer, rect.x, rect.y, rect.x, rect.y + rect.h);
-    SDL_RenderDrawLine(renderer, rect.x, rect.y, rect.x + rect.w, rect.y);
-    SDL_RenderDrawLine(renderer, rect.x, rect.y + rect.h, rect.x + rect.w, rect.y);
-    SDL_SetRenderTarget(renderer, screen);
+    SDL_Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(0, 0, 0, 255);
+    GUI::DrawLine(rect.x, rect.y, rect.x, rect.y + rect.h);
+    GUI::DrawLine(rect.x, rect.y, rect.x + rect.w, rect.y);
+    GUI::DrawLine(rect.x, rect.y + rect.h, rect.x + rect.w, rect.y);
+    GUI::SetRenderTarget(screen);
 }
-void Canva::renderCircle(SDL_Renderer* renderer, int x, int y, int r)
+void Canva::RenderCircle(int x, int y, float r)
 {
-    SDL_Texture* screen = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderTarget(renderer, canv);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    for (float theta = 0; theta < 360; theta += 0.1)
-    {
-        SDL_RenderDrawPoint(renderer, x + r * cos(theta * 3.14 / 180), y + r * sin(theta* 3.14 / 180));
-    }
-    SDL_SetRenderTarget(renderer, screen);
+    SDL_Texture* screen = GUI::GetRenderTarget();
+    GUI::SetRenderTarget(canv);
+    GUI::SetColor(0, 0, 0, 255);
+    GUI::DrawCircle(x, y, r);
+    GUI::SetRenderTarget(screen);
 }
 //<--------------------END OF FILE-------------------->

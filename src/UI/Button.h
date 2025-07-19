@@ -1,11 +1,12 @@
-#ifndef BUTTON_H
-#define BUTTON_H
-
-#include <SDL2/SDL.h>
-#include "../Core/Entity.h"
+#pragma once
+#include <functional>
+#include "../Entity.h"
+#include "../CommonFunction/CommonFunc.h"
 class Button : public Entity
 {
 public:
-    Button(int x, int y, int w, int h) : Entity(x, y, w, h, nullptr){};
+    Button(int x, int y, int w, int h, std::function<void()> funcPt);
+    void OnClick();
+private:
+    std::function<void()> func;
 };
-#endif

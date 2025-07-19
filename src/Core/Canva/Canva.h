@@ -1,9 +1,9 @@
 //<--------------------START OF FILE-------------------->
-#ifndef CANVA_H
-#define CANVA_H
+#pragma once
 #include <vector>
-#include <SDL2/SDL.h>
-#include "../Entity.h"
+#include <math.h>
+#include "../../GUI_Engine/GUI_Engine.h"
+#include "../../Entity.h"
 #define DRAWING
 enum DrawMode
 {
@@ -11,8 +11,7 @@ enum DrawMode
     LINE,
     RECTANGLE,
     CIRCLE,
-    RIGHT_TRIANGLE
-    
+    RIGHT_TRIANGLE   
 };
 struct Line
 {
@@ -24,25 +23,25 @@ struct Line
 class Canva : public Entity
 {
 public:
-    Canva(SDL_Renderer* renderer, int width, int height);
-    void update(DrawMode drawMode, SDL_Renderer* renderer);
-    void clearCanva(SDL_Renderer* renderer);  
-    void handleInput(SDL_Event& event);
-    void DRAWING renderPoint(SDL_Renderer* renderer, int x, int y);
-    void DRAWING renderRect(SDL_Renderer* renderer, SDL_Rect rect);
-    void DRAWING renderLine(SDL_Renderer* renderer, Line line);
-    void DRAWING renderRightTriangle(SDL_Renderer* renderer, SDL_Rect rect);
-    void DRAWING renderCircle(SDL_Renderer* renderer, int x, int y, int r);
-    SDL_Texture* getCanvaTex()
+    Canva(int width, int height);
+    void Update(DrawMode drawMode);
+    void ClearCanva();  
+    void HandleInput(Event& event);
+    void DRAWING RenderPoint(int x, int y);
+    void DRAWING RenderRect(Rect rect);
+    void DRAWING RenderLine(Line line);
+    void DRAWING RenderRightTriangle(Rect rect);
+    void DRAWING RenderCircle(int x, int y, float r);
+    Texture* GetCanvaTex()
     {
         return canv;
     }
-    void setDrawMode(DrawMode pMode)
+    void SetDrawMode(DrawMode pMode)
     {
         drawMode = pMode;
     }
 private:
-    SDL_Texture* canv;
+    Texture* canv;
     DrawMode drawMode;
     int WINDOW_WIDTH;
     int WINDOW_HEIGHT;
@@ -51,4 +50,3 @@ private:
     int tmpX;
     int tmpY;
 };
-#endif
